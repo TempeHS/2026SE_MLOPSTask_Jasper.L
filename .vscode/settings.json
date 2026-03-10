@@ -17,7 +17,7 @@
   },
   "editor.fontFamily": "JetBrains Mono",
   "terminal.integrated.fontFamily": "monospace",
-  "workbench.colorTheme": "Default Dark+",
+  "workbench.colorTheme": "OM Theme (No Italic)",
   "workbench.iconTheme": "vscode-icons",
   "github.copilot.enable": {
     "*": true,
