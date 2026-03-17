@@ -1,0 +1,43 @@
+{% extends 'layout.html' %} {% block content %}
+
+<h1>Minecraft Biome Predictor</h1>
+<p>Enter the raw block counts for a chunk, then click Predict.</p>
+
+<form id="predictForm" action="/predict" method="POST">
+  <div class="grid" id="inputs">
+    {% for feature, params in features.items() %}
+    <div>
+      <label>{{ feature.replace("_", " ") }}</label>
+      <span class="hint">max: {{ params.max | int }}</span>
+      <input
+        type="number"
+        id="{{ feature }}"
+        name="{{ feature }}"
+        value="0"
+        min="{{ params.min | int }}"
+        data-max="{{ params.max | int }}"
+        step="1"
+        required
+      />
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- CSRF token to prevent cross-site request forgery -->
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+  <button type="submit">Predict</button>
+  <button type="button" onclick="resetForm()" style="background: #888">
+    Reset
+  </button>
+</form>
+
+<div id="error"></div>
+<div id="result">
+  <h2 id="biome"></h2>
+  <p id="confidence"></p>
+</div>
+
+<script src="/static/predict.js"></script>
+
+{% endblock %}

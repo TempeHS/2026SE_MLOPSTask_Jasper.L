@@ -1,0 +1,130 @@
+{
+  "air": {
+    "min": 50627.0,
+    "max": 81401.0
+  },
+  "dirt": {
+    "min": 0.0,
+    "max": 1970.0
+  },
+  "water": {
+    "min": 0.0,
+    "max": 12165.0
+  },
+  "short_grass": {
+    "min": 0.0,
+    "max": 131.0
+  },
+  "grass_block": {
+    "min": 0.0,
+    "max": 473.0
+  },
+  "sand": {
+    "min": 0.0,
+    "max": 1390.0
+  },
+  "tall_seagrass": {
+    "min": 0.0,
+    "max": 114.0
+  },
+  "oak_leaves": {
+    "min": 0.0,
+    "max": 748.0
+  },
+  "birch_leaves": {
+    "min": 0.0,
+    "max": 476.0
+  },
+  "oak_log": {
+    "min": 0.0,
+    "max": 69.0
+  },
+  "tall_grass": {
+    "min": 0.0,
+    "max": 48.0
+  },
+  "birch_log": {
+    "min": 0.0,
+    "max": 70.0
+  },
+  "kelp": {
+    "min": 0.0,
+    "max": 95.0
+  },
+  "kelp_plant": {
+    "min": 0.0,
+    "max": 559.0
+  },
+  "dark_oak_log": {
+    "min": 0.0,
+    "max": 276.0
+  },
+  "dark_oak_leaves": {
+    "min": 0.0,
+    "max": 659.0
+  },
+  "spruce_leaves": {
+    "min": 0.0,
+    "max": 1196.0
+  },
+  "spruce_log": {
+    "min": 0.0,
+    "max": 311.0
+  },
+  "bush": {
+    "min": 0.0,
+    "max": 8.0
+  },
+  "sandstone": {
+    "min": 0.0,
+    "max": 1154.0
+  },
+  "brown_mushroom": {
+    "min": 0.0,
+    "max": 35.0
+  },
+  "dandelion": {
+    "min": 0.0,
+    "max": 9.0
+  },
+  "podzol": {
+    "min": 0.0,
+    "max": 393.0
+  },
+  "red_mushroom_block": {
+    "min": 0.0,
+    "max": 90.0
+  },
+  "mushroom_stem": {
+    "min": 0.0,
+    "max": 12.0
+  },
+  "poppy": {
+    "min": 0.0,
+    "max": 17.0
+  },
+  "coarse_dirt": {
+    "min": 0.0,
+    "max": 314.0
+  },
+  "oxeye_daisy": {
+    "min": 0.0,
+    "max": 8.0
+  },
+  "emerald_ore": {
+    "min": 0.0,
+    "max": 9.0
+  },
+  "lily_pad": {
+    "min": 0.0,
+    "max": 15.0
+  },
+  "snow": {
+    "min": 0.0,
+    "max": 74.0
+  },
+  "acacia_leaves": {
+    "min": 0.0,
+    "max": 58.0
+  }
+}
