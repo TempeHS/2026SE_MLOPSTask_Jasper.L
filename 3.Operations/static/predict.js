@@ -1,8 +1,10 @@
 document
   .getElementById("predictForm")
   .addEventListener("submit", async function (e) {
-    e.preventDefault(); // Stop normal form submission
-    document.getElementById("error").textContent = "";
+    e.preventDefault();
+    const errorDiv = document.getElementById("error");
+    errorDiv.style.display = "none";
+    errorDiv.textContent = "";
 
     const formData = new FormData(this);
     const data = {};
@@ -12,7 +14,6 @@ document
       }
     });
 
-    // Include CSRF token in headers
     const csrfToken = formData.get("csrf_token");
 
     const res = await fetch("/predict", {
@@ -26,7 +27,8 @@ document
 
     const json = await res.json();
     if (json.error) {
-      document.getElementById("error").textContent = json.error;
+      errorDiv.textContent = json.error;
+      errorDiv.style.display = "block";
     } else {
       document.getElementById("biome").textContent = json.biome.replace(
         /_/g,
@@ -36,17 +38,26 @@ document
         `Confidence: ${json.confidence}%`;
       document.getElementById("result").style.display = "block";
 
-      // Show out-of-range warnings if any
       if (json.warnings && json.warnings.length > 0) {
-        document.getElementById("error").textContent =
+        errorDiv.textContent =
           "⚠️ Some values were outside training range and clamped: " +
           json.warnings.join(", ");
+        errorDiv.style.display = "block";
       }
     }
   });
 
 function resetForm() {
-  document.getElementById("predictForm").reset();
+  // Reset each input to its median value instead of 0
+  document
+    .querySelectorAll("#predictForm input[type='number']")
+    .forEach((input) => {
+      const min = parseFloat(input.min) || 0;
+      const max = parseFloat(input.dataset.max) || 0;
+      input.value = Math.floor((min + max) / 2);
+    });
   document.getElementById("result").style.display = "none";
-  document.getElementById("error").textContent = "";
+  const errorDiv = document.getElementById("error");
+  errorDiv.style.display = "none";
+  errorDiv.textContent = "";
 }

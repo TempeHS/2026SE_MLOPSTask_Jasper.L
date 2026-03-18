@@ -1,76 +1,27 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
-    <title>Biome Predictor</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- CSP meta tag consistent with server-side CSP headers -->
     <meta
       http-equiv="Content-Security-Policy"
-      content="base-uri 'self'; default-src 'self'; style-src 'self'; script-src 'self'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; form-action 'self';"
+      content="base-uri 'self'; default-src 'self'; style-src 'self'; script-src 'self'; img-src 'self' data:; media-src 'self'; font-src 'self'; connect-src 'self'; object-src 'self'; worker-src 'self'; frame-src 'none'; form-action 'self'; manifest-src 'self'"
     />
-    <style>
-      body {
-        font-family: sans-serif;
-        max-width: 700px;
-        margin: 40px auto;
-        padding: 0 20px;
-      }
-      h1 {
-        color: #2e7d32;
-      }
-      p {
-        color: #555;
-      }
-      .grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-        margin: 20px 0;
-      }
-      label {
-        font-size: 0.85rem;
-        display: block;
-        margin-bottom: 2px;
-      }
-      .hint {
-        font-size: 0.75rem;
-        color: #999;
-      }
-      input {
-        width: 100%;
-        padding: 5px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-      }
-      button {
-        padding: 10px 30px;
-        background: #2e7d32;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 1rem;
-        margin-right: 10px;
-      }
-      button:hover {
-        background: #1b5e20;
-      }
-      #result {
-        margin-top: 20px;
-        padding: 15px;
-        background: #f1f8e9;
-        border-left: 4px solid #2e7d32;
-        display: none;
-      }
-      #result h2 {
-        margin: 0 0 5px 0;
-      }
-      #error {
-        color: red;
-        margin-top: 10px;
-      }
-    </style>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Biome Predictor</title>
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="{{ url_for('static', filename='images/favicon.png') }}"
+    />
+    <link
+      href="{{ url_for('static', filename='css/bootstrap.min.css') }}"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
   </head>
   <body>
     {% block content %}{% endblock %}
