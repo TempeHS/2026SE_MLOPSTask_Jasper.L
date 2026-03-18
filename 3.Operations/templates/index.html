@@ -3,58 +3,64 @@
 <div class="container py-4">
   <h1 class="mb-3">Minecraft Biome Predictor</h1>
   <p class="text-muted">
-    Enter the raw block counts for a chunk, then click Predict.
+    Select which block features you want to configure, then click Next. Blocks
+    that are not configured will default to median values.
   </p>
 
-  <form id="predictForm" action="/predict" method="POST">
+  <form action="/configure" method="GET">
     <div
-      class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 mb-3"
+      class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 mb-4"
       id="inputs"
     >
-      {% for feature, params in features.items() %} {% set median = ((params.min
-      + params.max) / 2) | int %}
+      {% for feature, params in features.items() %}
       <div class="col">
-        <label class="form-label fw-semibold"
-          >{{ feature.replace("_", " ") }}</label
-        >
-        <div class="d-flex justify-content-between text-muted small mb-1">
-          <span>min: {{ params.min | int }}</span>
-          <span>max: {{ params.max | int }}</span>
+        <div class="form-check card p-3 h-100">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="selected"
+            value="{{ feature }}"
+            id="chk_{{ feature }}"
+          />
+          <label class="form-check-label fw-semibold" for="chk_{{ feature }}">
+            {{ feature.replace("_", " ").title() }}
+          </label>
+          <small class="text-muted"
+            >min: {{ params.min | int }} / max: {{ params.max | int }}</small
+          >
         </div>
-        <input
-          type="number"
-          id="{{ feature }}"
-          name="{{ feature }}"
-          value="{{ median }}"
-          min="{{ params.min | int }}"
-          data-max="{{ params.max | int }}"
-          step="1"
-          required
-          class="form-control"
-        />
       </div>
       {% endfor %}
     </div>
 
-    <!-- CSRF token to prevent cross-site request forgery -->
-    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-
-    <button type="submit" class="btn btn-primary me-2">Predict</button>
-    <button type="button" onclick="resetForm()" class="btn btn-secondary">
-      Reset
+    <button
+      type="button"
+      onclick="selectAll()"
+      class="btn btn-outline-secondary me-2"
+    >
+      Select All
     </button>
+    <button
+      type="button"
+      onclick="clearAll()"
+      class="btn btn-outline-secondary me-2"
+    >
+      Clear All
+    </button>
+    <button type="submit" class="btn btn-primary">Next: Set Values →</button>
   </form>
-
-  <div id="error" class="alert alert-warning mt-3" style="display: none"></div>
-
-  <div id="result" class="card mt-4" style="display: none">
-    <div class="card-body">
-      <h2 id="biome" class="card-title text-capitalize"></h2>
-      <p id="confidence" class="card-text text-muted"></p>
-    </div>
-  </div>
 </div>
 
-<script src="/static/predict.js"></script>
-
+<script>
+  function selectAll() {
+    document
+      .querySelectorAll("input[type='checkbox']")
+      .forEach((cb) => (cb.checked = true));
+  }
+  function clearAll() {
+    document
+      .querySelectorAll("input[type='checkbox']")
+      .forEach((cb) => (cb.checked = false));
+  }
+</script>
 {% endblock %}

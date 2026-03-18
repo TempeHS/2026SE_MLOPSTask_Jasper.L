@@ -36,7 +36,6 @@ BIOME_MAP = {
     11: "windswept_savanna",
 }
 
-# Load model and scaling params once at startup
 model = pickle.load(open(MODEL_PATH, "rb"))
 scaling_params = json.load(open(SCALING_PATH, "r"))
 FEATURES = list(scaling_params.keys())
@@ -56,7 +55,6 @@ def scale_input(raw_data: dict) -> np.ndarray:
     return np.array([scaled])
 
 
-# Redirect common index variants to root
 @app.route("/index", methods=["GET"])
 @app.route("/index.htm", methods=["GET"])
 @app.route("/index.asp", methods=["GET"])
@@ -66,7 +64,6 @@ def root():
     return redirect("/", 302)
 
 
-# Serve the HTML page with CSP headers
 @app.route("/", methods=["GET"])
 @csp_header(
     {
@@ -91,22 +88,39 @@ def index():
     return render_template("index.html", features=scaling_params)
 
 
-# API endpoint for prediction
+@app.route("/configure", methods=["GET"])
+def configure():
+    selected = request.args.getlist("selected")
+    if not selected:
+        return redirect("/")
+    return render_template(
+        "configure.html", selected=selected, all_features=scaling_params
+    )
+
+
 @app.route("/predict", methods=["POST"])
 @csrf.exempt
 def predict():
-    raw_data = request.get_json()
-    if not raw_data:
-        app.logger.warning("Predict called with no data")
-        return jsonify({"error": "No data provided"}), 400
+    raw_data = {}
+    for feature in FEATURES:
+        if request.form.get(feature) is not None:
+            # User explicitly set this value
+            try:
+                raw_data[feature] = float(request.form.get(feature))
+            except (ValueError, TypeError):
+                raw_data[feature] = scaling_params[feature]["min"]
+        else:
+            # Not selected — use median so it doesn't bias the prediction
+            min_val = scaling_params[feature]["min"]
+            max_val = scaling_params[feature]["max"]
+            raw_data[feature] = (min_val + max_val) / 2
 
-    # Check for out-of-range values before scaling
     warnings = []
     for feature in FEATURES:
-        value = raw_data.get(feature, 0.0)
+        value = raw_data[feature]
         max_val = scaling_params[feature]["max"]
         if value > max_val:
-            warnings.append(f"{feature} ({value} exceeds max of {int(max_val)})")
+            warnings.append(f"{feature} ({int(value)} exceeds max of {int(max_val)})")
 
     inputs = scale_input(raw_data)
     prediction = model.predict(inputs)[0]
@@ -114,12 +128,20 @@ def predict():
     biome = BIOME_MAP.get(prediction, "unknown")
     app.logger.info(f"Prediction: {biome} ({confidence}%)")
 
-    return jsonify(
-        {
-            "biome": biome,
-            "confidence": confidence,
-            "warnings": warnings,  # empty list if no issues
-        }
+    # Build back URL so the button returns to configure with the same selected features
+    selected = [f for f in FEATURES if request.form.get(f) is not None]
+    back_url = "/configure?" + "&".join(f"selected={f}" for f in selected)
+
+    return render_template(
+        "result.html",
+        biome=biome,
+        confidence=confidence,
+        warnings=warnings,
+        feature_names=FEATURES,
+        user_values=[raw_data[f] for f in FEATURES],
+        min_values=[scaling_params[f]["min"] for f in FEATURES],
+        max_values=[scaling_params[f]["max"] for f in FEATURES],
+        back_url=back_url,
     )
 
 

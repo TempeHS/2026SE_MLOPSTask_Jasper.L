@@ -1,0 +1,65 @@
+{% extends 'layout.html' %} {% block content %}
+
+<div class="container py-4">
+  <h1 class="mb-3">Prediction Result</h1>
+
+  {% if warnings %}
+  <div class="alert alert-warning">
+    ⚠️ Some values were outside training range and clamped:<br />
+    {{ warnings | join(", ") }}
+  </div>
+  {% endif %}
+
+  <div class="card mb-4">
+    <div class="card-body text-center">
+      <h2 class="card-title text-capitalize display-5">
+        {{ biome.replace("_", " ") }}
+      </h2>
+      <p class="card-text text-muted fs-5">
+        Confidence: <strong>{{ confidence }}%</strong>
+      </p>
+    </div>
+  </div>
+
+  <h4 class="mb-3">Input Values vs. Training Range</h4>
+  <canvas id="inputChart" height="120"></canvas>
+
+  <div class="mt-4">
+    <a href="/" class="btn btn-primary me-2">Start Over</a>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/chart.min.js') }}"></script>
+<script>
+  const labels = {{ feature_names | tojson }};
+  const userValues = {{ user_values | tojson }};
+  const minValues = {{ min_values | tojson }};
+  const maxValues = {{ max_values | tojson }};
+
+  const ctx = document.getElementById('inputChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels.map(l => l.replace(/_/g, ' ')),
+      datasets: [
+        {
+          label: 'Your Input',
+          data: userValues,
+          backgroundColor: 'rgba(13, 110, 253, 0.7)',
+        },
+        {
+          label: 'Max (training)',
+          data: maxValues,
+          backgroundColor: 'rgba(200, 200, 200, 0.4)',
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+  });
+</script>
+{% endblock %}

@@ -48,13 +48,10 @@ document
   });
 
 function resetForm() {
-  // Reset each input to its median value instead of 0
   document
     .querySelectorAll("#predictForm input[type='number']")
     .forEach((input) => {
-      const min = parseFloat(input.min) || 0;
-      const max = parseFloat(input.dataset.max) || 0;
-      input.value = Math.floor((min + max) / 2);
+      input.value = parseFloat(input.min) || 0;
     });
   document.getElementById("result").style.display = "none";
   const errorDiv = document.getElementById("error");
